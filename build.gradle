@@ -1,0 +1,51 @@
+buildscript {
+    repositories {
+        jcenter {
+            url 'http://jcenter.bintray.com'
+        }
+        maven {
+            url "https://maven.eveoh.nl/content/repositories/releases"
+        }
+    }
+    dependencies {
+        classpath "nl.eveoh:gradle-aspectj:1.6"
+    }
+}
+
+group 'com.github.nwillc'
+version '1.0-SNAPSHOT'
+
+project.ext {
+    aspectjVersion = "1.8.7"
+}
+
+apply plugin: 'java'
+apply plugin: "aspectj"
+
+sourceCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.aspectj:aspectjrt:1.8.7"
+    testCompile 'junit:junit:4.12',
+            'org.assertj:assertj-core:3.2.0'
+}
+
+test {
+    testLogging.showStandardStreams = true
+}
+
+jar {
+    dependsOn classes
+    from sourceSets.main.output
+    exclude("**/examples") // Exclude the examples needed for tests
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    exclude("**/examples") // Exclude the examples needed for tests
+    classifier = "javadoc"
+}
